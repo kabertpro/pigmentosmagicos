@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pigmentos Mágicos - Pinturas Naturales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --purple: #A8DADC;
+            --green: #95E1D3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+            text-decoration: underline;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Home Section */
+        .hero {
+            background: linear-gradient(135deg, var(--accent), var(--green));
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        .qr-scanner-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #qr-video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            margin: 1rem auto;
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        .product-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--purple), var(--green));
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* About Section */
+        .about-content {
+            background: linear-gradient(135deg, #FFE5E5, #E5F9FF);
+            padding: 3rem;
+            border-radius: 20px;
+            line-height: 1.8;
+        }
+
+        .about-content h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Contact Section */
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .creator-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .creator-card:hover {
+            transform: scale(1.05);
+        }
+
+        .creator-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .creator-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Product Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-image {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                padding-top: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .status-message.error {
+            background: #ffe5e5;
+            color: #cc0000;
+            display: block;
+        }
+
+        .status-message.success {
+            background: #e5ffe5;
+            color: #008000;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🎨 Pigmentos Mágicos</div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('about')">Quiénes Somos</a></li>
+                <li><a href="#" onclick="showSection('products')">Productos</a></li>
+                <li><a href="#" onclick="showSection('contact')">Contactos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HOME -->
+        <section id="home" class="active">
+            <div class="hero">
+                <h1>¡Bienvenidos a Pigmentos Mágicos!</h1>
+                <p>Pinturas naturales hechas con amor por pequeños artistas</p>
+            </div>
+
+            <div class="qr-scanner-section">
+                <h2>📱 Escanea el QR de tu producto</h2>
+                <p>Usa tu cámara para escanear el código QR de cualquier producto y descubre más información</p>
+                <button class="btn" id="startScanBtn" onclick="startQRScanner()">Iniciar Escáner</button>
+                <button class="btn" id="stopScanBtn" onclick="stopQRScanner()" style="display:none;">Detener Escáner</button>
+                <video id="qr-video"></video>
+                <div id="scanStatus" class="status-message"></div>
+            </div>
+
+            <h2 style="text-align: center;">Productos Destacados</h2>
+            <div class="products-grid" id="featuredProducts"></div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="about-content">
+                <h2>🌈 Quiénes Somos</h2>
+                <p>
+                    <strong>Pigmentos Mágicos</strong> es una iniciativa especial creada por un grupo de talentosos niños emprendedores
+                    que decidieron explorar el maravilloso mundo del arte y la naturaleza.
+                </p>
+                <p>
+                    Nuestras pinturas están elaboradas con pigmentos naturales extraídos de plantas, flores, frutas y minerales,
+                    combinando colores primarios para crear una paleta vibrante y única. Cada frasco de pintura es el resultado
+                    del trabajo dedicado, la creatividad y el amor de estos pequeños artistas.
+                </p>
+                <p>
+                    Creemos en el poder de la imaginación infantil y en la importancia de cuidar nuestro planeta. Por eso,
+                    todos nuestros productos son 100% naturales, biodegradables y seguros para el uso de niños y adultos.
+                </p>
+                <p>
+                    <strong>Nuestra misión:</strong> Inspirar a más niños a explorar su creatividad mientras aprenden sobre
+                    la naturaleza y el emprendimiento.
+                </p>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="products">
+            <h1>🎨 Nuestros Productos</h1>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">
+                Explora nuestra colección completa de pigmentos naturales
+            </p>
+            <div class="products-grid" id="allProducts"></div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <h1>👨‍🎨 Nuestros Pequeños Creadores</h1>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">
+                Conoce al talentoso equipo detrás de Pigmentos Mágicos
+            </p>
+            <div class="creators-grid">
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">Juan Salinas</div>
+                    <p>Especialista en colores cálidos</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">René Márquez</div>
+                    <p>Maestro de mezclas</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">Albert Gonzales</div>
+                    <p>Experto en tonos verdes</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">José Sanjines</div>
+                    <p>Creador de azules profundos</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👧</div>
+                    <div class="creator-name">Miriam Mendoza</div>
+                    <p>Artista de colores brillantes</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👧</div>
+                    <div class="creator-name">Lidia Vásquez</div>
+                    <p>Especialista en pasteles</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-image" id="modalImage"></div>
+            <div class="modal-body">
+                <h2 id="modalTitle"></h2>
+                <p class="product-price" id="modalPrice"></p>
+                <p id="modalDescription"></p>
+                <button class="btn" style="width: 100%; margin-top: 1rem;">Agregar al Carrito</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+    <script>
+        // Products Data
+        const products = [
+            { id: 'PM001', name: 'Rojo Carmesí Natural', price: 45, emoji: '🔴', description: 'Pigmento rojo intenso extraído de remolacha y pétalos de rosa.' },
+            { id: 'PM002', name: 'Azul Celeste Puro', price: 50, emoji: '🔵', description: 'Azul brillante obtenido de flores de malva y espirulina.' },
+            { id: 'PM003', name: 'Amarillo Sol Radiante', price: 40, emoji: '🟡', description: 'Amarillo vibrante de cúrcuma y flores de caléndula.' },
+            { id: 'PM004', name: 'Verde Bosque Mágico', price: 48, emoji: '🟢', description: 'Verde profundo de espinaca y hojas de menta.' },
+            { id: 'PM005', name: 'Naranja Atardecer', price: 42, emoji: '🟠', description: 'Naranja cálido de zanahoria y pimentón.' },
+            { id: 'PM006', name: 'Violeta Místico', price: 55, emoji: '🟣', description: 'Violeta elegante de repollo morado y arándanos.' },
+            { id: 'PM007', name: 'Rosa Primavera', price: 43, emoji: '🌸', description: 'Rosa suave de pétalos de rosa y fresas.' },
+            { id: 'PM008', name: 'Turquesa Océano', price: 52, emoji: '💎', description: 'Turquesa brillante de espirulina y malaquita.' },
+            { id: 'PM009', name: 'Marrón Tierra', price: 38, emoji: '🟤', description: 'Marrón natural de café y cacao puro.' },
+            { id: 'PM010', name: 'Fucsia Tropical', price: 47, emoji: '🌺', description: 'Fucsia vibrante de pitaya y bugambilia.' },
+            { id: 'PM011', name: 'Índigo Nocturno', price: 54, emoji: '🌙', description: 'Índigo profundo de mora azul y añil.' },
+            { id: 'PM012', name: 'Coral Marino', price: 46, emoji: '🪸', description: 'Coral cálido de papaya y pimentón dulce.' }
+        ];
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if (window.innerWidth <= 768) {
+                document.getElementById('navLinks').classList.remove('active');
+            }
+            if (sectionId !== 'home') {
+                stopQRScanner();
+            }
+        }
+
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // Render Products
+        function renderProducts(container, productsToShow) {
+            const grid = document.getElementById(container);
+            grid.innerHTML = productsToShow.map(product => `
+                <div class="product-card" onclick="showProductDetail('${product.id}')">
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">Bs ${product.price}</div>
+                        <div class="product-description">${product.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Product Detail Modal
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('modalImage').textContent = product.emoji;
+            document.getElementById('modalTitle').textContent = product.name;
+            document.getElementById('modalPrice').textContent = `Bs ${product.price}`;
+            document.getElementById('modalDescription').textContent = product.description;
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        // QR Scanner
+        let videoStream = null;
+        let scanningActive = false;
+
+        async function startQRScanner() {
+            const video = document.getElementById('qr-video');
+            const startBtn = document.getElementById('startScanBtn');
+            const stopBtn = document.getElementById('stopScanBtn');
+            const status = document.getElementById('scanStatus');
+
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                video.srcObject = videoStream;
+                video.setAttribute('playsinline', true);
+                video.play();
+                
+                video.style.display = 'block';
+                startBtn.style.display = 'none';
+                stopBtn.style.display = 'inline-block';
+                
+                scanningActive = true;
+                status.className = 'status-message success';
+                status.textContent = 'Escáner activo. Enfoca el código QR...';
+                
+                requestAnimationFrame(tick);
+            } catch (err) {
+                status.className = 'status-message error';
+                status.textContent = 'Error: No se pudo acceder a la cámara. Verifica los permisos.';
+                console.error(err);
+            }
+        }
+
+        function tick() {
+            const video = document.getElementById('qr-video');
+            const status = document.getElementById('scanStatus');
+            
+            if (video.readyState === video.HAVE_ENOUGH_DATA && scanningActive) {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    scanningActive = false;
+                    const qrData = code.data;
+                    
+                    // Check if QR matches product ID
+                    const product = products.find(p => qrData.includes(p.id));
+                    if (product) {
+                        stopQRScanner();
+                        showProductDetail(product.id);
+                        status.className = 'status-message success';
+                        status.textContent = `¡Producto encontrado: ${product.name}!`;
+                    } else {
+                        status.className = 'status-message error';
+                        status.textContent = 'Código QR no reconocido. Intenta con otro.';
+                        scanningActive = true;
+                    }
+                }
+            }
+            
+            if (scanningActive) {
+                requestAnimationFrame(tick);
+            }
+        }
+
+        function stopQRScanner() {
+            const video = document.getElementById('qr-video');
+            const startBtn = document.getElementById('startScanBtn');
+            const stopBtn = document.getElementById('stopScanBtn');
+            
+            scanningActive = false;
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            video.style.display = 'none';
+            startBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
+        }
+
+        // Initialize
+        renderProducts('featuredProducts', products.slice(0, 6));
+        renderProducts('allProducts', products);
+
+        // Close modal on outside click
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target.id === 'productModal') closeModal();
+        });
+    </script>
+</body>
+</html>
