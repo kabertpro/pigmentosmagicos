@@ -614,8 +614,21 @@
                     scanningActive = false;
                     const qrData = code.data;
                     
-                    // Check if QR matches product ID
-                    const product = products.find(p => qrData.includes(p.id));
+                    // Check if QR matches product ID or URL
+                    let productId = null;
+                    
+                    // Check if it's a direct product ID
+                    if (products.find(p => p.id === qrData)) {
+                        productId = qrData;
+                    } else {
+                        // Extract product ID from URL (e.g., https://kabertpro.github.io/pigmentosmagicos/#PM001)
+                        const match = qrData.match(/#(PM\d{3})/);
+                        if (match) {
+                            productId = match[1];
+                        }
+                    }
+                    
+                    const product = products.find(p => p.id === productId);
                     if (product) {
                         stopQRScanner();
                         showProductDetail(product.id);
@@ -649,9 +662,21 @@
             stopBtn.style.display = 'none';
         }
 
+        // Check if page loaded with product hash
+        function checkURLHash() {
+            const hash = window.location.hash.substring(1);
+            if (hash && products.find(p => p.id === hash)) {
+                showProductDetail(hash);
+            }
+        }
+
         // Initialize
         renderProducts('featuredProducts', products.slice(0, 6));
         renderProducts('allProducts', products);
+        checkURLHash();
+        
+        // Listen for hash changes
+        window.addEventListener('hashchange', checkURLHash);
 
         // Close modal on outside click
         document.getElementById('productModal').addEventListener('click', (e) => {
