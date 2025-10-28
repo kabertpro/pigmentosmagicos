@@ -574,12 +574,19 @@
             const status = document.getElementById('scanStatus');
 
             try {
-                videoStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' } 
-                });
+                const constraints = { 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    } 
+                };
+                
+                videoStream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = videoStream;
                 video.setAttribute('playsinline', true);
-                video.play();
+                
+                await video.play();
                 
                 video.style.display = 'block';
                 startBtn.style.display = 'none';
@@ -589,7 +596,13 @@
                 status.className = 'status-message success';
                 status.textContent = 'Escáner activo. Enfoca el código QR...';
                 
-                requestAnimationFrame(tick);
+                // Wait for video to be ready before starting scan
+                video.addEventListener('loadedmetadata', () => {
+                    setTimeout(() => {
+                        requestAnimationFrame(tick);
+                    }, 500);
+                }, { once: true });
+                
             } catch (err) {
                 status.className = 'status-message error';
                 status.textContent = 'Error: No se pudo acceder a la cámara. Verifica los permisos.';
@@ -601,43 +614,57 @@
             const video = document.getElementById('qr-video');
             const status = document.getElementById('scanStatus');
             
-            if (video.readyState === video.HAVE_ENOUGH_DATA && scanningActive) {
+            if (!scanningActive) return;
+            
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                const videoWidth = video.videoWidth;
+                const videoHeight = video.videoHeight;
                 
-                if (code) {
-                    scanningActive = false;
-                    const qrData = code.data;
+                if (videoWidth > 0 && videoHeight > 0) {
+                    canvas.width = videoWidth;
+                    canvas.height = videoHeight;
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
                     
-                    // Check if QR matches product ID or URL
-                    let productId = null;
-                    
-                    // Check if it's a direct product ID
-                    if (products.find(p => p.id === qrData)) {
-                        productId = qrData;
-                    } else {
-                        // Extract product ID from URL (e.g., https://kabertpro.github.io/pigmentosmagicos/#PM001)
-                        const match = qrData.match(/#(PM\d{3})/);
-                        if (match) {
-                            productId = match[1];
+                    try {
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                            inversionAttempts: 'dontInvert'
+                        });
+                        
+                        if (code) {
+                            scanningActive = false;
+                            const qrData = code.data;
+                            
+                            // Check if QR matches product ID or URL
+                            let productId = null;
+                            
+                            // Check if it's a direct product ID
+                            if (products.find(p => p.id === qrData)) {
+                                productId = qrData;
+                            } else {
+                                // Extract product ID from URL (e.g., https://kabertpro.github.io/pigmentosmagicos/#PM001)
+                                const match = qrData.match(/#(PM\d{3})/);
+                                if (match) {
+                                    productId = match[1];
+                                }
+                            }
+                            
+                            const product = products.find(p => p.id === productId);
+                            if (product) {
+                                stopQRScanner();
+                                showProductDetail(product.id);
+                                status.className = 'status-message success';
+                                status.textContent = `¡Producto encontrado: ${product.name}!`;
+                            } else {
+                                status.className = 'status-message error';
+                                status.textContent = 'Código QR no reconocido. Intenta con otro.';
+                                scanningActive = true;
+                            }
                         }
-                    }
-                    
-                    const product = products.find(p => p.id === productId);
-                    if (product) {
-                        stopQRScanner();
-                        showProductDetail(product.id);
-                        status.className = 'status-message success';
-                        status.textContent = `¡Producto encontrado: ${product.name}!`;
-                    } else {
-                        status.className = 'status-message error';
-                        status.textContent = 'Código QR no reconocido. Intenta con otro.';
-                        scanningActive = true;
+                    } catch (e) {
+                        console.error('Error al procesar imagen:', e);
                     }
                 }
             }
