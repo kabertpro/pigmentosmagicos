@@ -3,557 +3,711 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenTalk - Escaner QR de Audios</title>
+    <title>Pigmentos Mágicos - Pinturas Naturales</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --purple: #A8DADC;
+            --green: #95E1D3;
         }
 
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: white;
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
+        /* Header & Navigation */
         header {
-            text-align: center;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-
-        .app-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-        }
-
-        #reader {
-            width: 100%;
-            max-width: 500px;
+        nav {
+            max-width: 1200px;
             margin: 0 auto;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            background-color: #000;
-            min-height: 300px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        #reader video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        #qr-shaded-region {
-            border-width: 40px !important;
-        }
-
-        #result {
-            text-align: center;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .scan-status {
-            text-align: center;
-            margin: 10px 0;
-            font-style: italic;
-            opacity: 0.8;
-        }
-
-        .audio-player {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .audio-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .audio-icon {
-            font-size: 2rem;
-            margin-right: 15px;
-        }
-
-        .audio-title {
-            font-size: 1.3rem;
-        }
-
-        audio {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+            padding: 0 2rem;
             flex-wrap: wrap;
         }
 
-        button {
-            background: linear-gradient(to right, #4A00E0, #8E2DE2);
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
             color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+            text-decoration: underline;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
             border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 1rem;
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        button:active {
-            transform: translateY(1px);
+        section {
+            display: none;
+            animation: fadeIn 0.5s;
         }
 
-        button:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
+        section.active {
+            display: block;
         }
 
-        .btn-scan {
-            background: linear-gradient(to right, #00b09b, #96c93d);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn-stop {
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
+        h1, h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
         }
 
-        .hidden {
+        /* Home Section */
+        .hero {
+            background: linear-gradient(135deg, var(--accent), var(--green));
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        .qr-scanner-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #qr-video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            margin: 1rem auto;
             display: none;
         }
 
-        .camera-permission {
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        .product-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--purple), var(--green));
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* About Section */
+        .about-content {
+            background: linear-gradient(135deg, #FFE5E5, #E5F9FF);
+            padding: 3rem;
+            border-radius: 20px;
+            line-height: 1.8;
+        }
+
+        .about-content h2 {
             text-align: center;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
 
-        .permission-btn {
-            background: linear-gradient(to right, #00b09b, #96c93d);
+        .about-content p {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 1.5rem;
         }
 
-        .debug-info {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            margin-top: 10px;
+        /* Contact Section */
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
-        footer {
+        .creator-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             text-align: center;
-            margin-top: 30px;
-            opacity: 0.7;
-            font-size: 0.9rem;
+            transition: transform 0.3s;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
+        .creator-card:hover {
+            transform: scale(1.05);
+        }
+
+        .creator-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .creator-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Product Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-image {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
             }
-            
-            h1 {
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                padding-top: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hero h1 {
                 font-size: 2rem;
             }
-            
-            button {
-                padding: 10px 20px;
-                width: 100%;
-            }
 
-            .controls {
-                flex-direction: column;
+            .products-grid {
+                grid-template-columns: 1fr;
             }
+        }
 
-            #reader {
-                min-height: 250px;
-            }
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .status-message.error {
+            background: #ffe5e5;
+            color: #cc0000;
+            display: block;
+        }
+
+        .status-message.success {
+            background: #e5ffe5;
+            color: #008000;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>GreenTalk - Escaner QR</h1>
-            <p class="subtitle">Escanea cualquier código QR para reproducir un audio aleatorio de plantas</p>
-        </header>
+    <header>
+        <nav>
+            <div class="logo">🎨 Pigmentos Mágicos</div>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('about')">Quiénes Somos</a></li>
+                <li><a href="#" onclick="showSection('products')">Productos</a></li>
+                <li><a href="#" onclick="showSection('contact')">Contactos</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <div class="camera-permission" id="permissionSection">
-            <h3>Permiso de Cámara Requerido</h3>
-            <p>Para usar el escáner QR, necesitamos acceso a tu cámara.</p>
-            <button id="permissionButton" class="permission-btn">Permitir Cámara</button>
-        </div>
-
-        <div class="app-section">
-            <h2 class="section-title">Escanear Código QR</h2>
-            <div id="reader">
-                <div id="scannerPlaceholder">El escáner se activará aquí</div>
+    <main>
+        <!-- HOME -->
+        <section id="home" class="active">
+            <div class="hero">
+                <h1>¡Bienvenidos a Pigmentos Mágicos!</h1>
+                <p>Pinturas naturales hechas con amor por pequeños artistas</p>
             </div>
-            <div class="scan-status" id="scanStatus">Preparando escáner...</div>
-            <div id="result">Haz clic en "Permitir Cámara" para comenzar</div>
-        </div>
 
-        <div class="app-section">
-            <h2 class="section-title">Reproductor de Audio</h2>
-            <div id="audioPlayer" class="audio-player hidden">
-                <div class="audio-info">
-                    <div class="audio-icon">🎵</div>
-                    <div class="audio-title" id="audioTitle">Audio seleccionado</div>
+            <div class="qr-scanner-section">
+                <h2>📱 Escanea el QR de tu producto</h2>
+                <p>Usa tu cámara para escanear el código QR de cualquier producto y descubre más información</p>
+                <button class="btn" id="startScanBtn" onclick="startQRScanner()">Iniciar Escáner</button>
+                <button class="btn" id="stopScanBtn" onclick="stopQRScanner()" style="display:none;">Detener Escáner</button>
+                <video id="qr-video"></video>
+                <div id="scanStatus" class="status-message"></div>
+            </div>
+
+            <h2 style="text-align: center;">Productos Destacados</h2>
+            <div class="products-grid" id="featuredProducts"></div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="about-content">
+                <h2>🌈 Quiénes Somos</h2>
+                <p>
+                    <strong>Pigmentos Mágicos</strong> es una iniciativa especial creada por un grupo de talentosos niños emprendedores
+                    que decidieron explorar el maravilloso mundo del arte y la naturaleza.
+                </p>
+                <p>
+                    Nuestras pinturas están elaboradas con pigmentos naturales extraídos de plantas, flores, frutas y minerales,
+                    combinando colores primarios para crear una paleta vibrante y única. Cada frasco de pintura es el resultado
+                    del trabajo dedicado, la creatividad y el amor de estos pequeños artistas.
+                </p>
+                <p>
+                    Creemos en el poder de la imaginación infantil y en la importancia de cuidar nuestro planeta. Por eso,
+                    todos nuestros productos son 100% naturales, biodegradables y seguros para el uso de niños y adultos.
+                </p>
+                <p>
+                    <strong>Nuestra misión:</strong> Inspirar a más niños a explorar su creatividad mientras aprenden sobre
+                    la naturaleza y el emprendimiento.
+                </p>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="products">
+            <h1>🎨 Nuestros Productos</h1>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">
+                Explora nuestra colección completa de pigmentos naturales
+            </p>
+            <div class="products-grid" id="allProducts"></div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <h1>👨‍🎨 Nuestros Pequeños Creadores</h1>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">
+                Conoce al talentoso equipo detrás de Pigmentos Mágicos
+            </p>
+            <div class="creators-grid">
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">Juan Salinas</div>
+                    <p>Especialista en colores cálidos</p>
                 </div>
-                <audio id="audioElement" controls>
-                    Tu navegador no soporta el elemento de audio.
-                </audio>
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">René Márquez</div>
+                    <p>Maestro de mezclas</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">Albert Gonzales</div>
+                    <p>Experto en tonos verdes</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👦</div>
+                    <div class="creator-name">José Sanjines</div>
+                    <p>Creador de azules profundos</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👧</div>
+                    <div class="creator-name">Miriam Mendoza</div>
+                    <p>Artista de colores brillantes</p>
+                </div>
+                <div class="creator-card">
+                    <div class="creator-icon">👧</div>
+                    <div class="creator-name">Lidia Vásquez</div>
+                    <p>Especialista en pasteles</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-image" id="modalImage"></div>
+            <div class="modal-body">
+                <h2 id="modalTitle"></h2>
+                <p class="product-price" id="modalPrice"></p>
+                <p id="modalDescription"></p>
+                <button class="btn" style="width: 100%; margin-top: 1rem;">Agregar al Carrito</button>
             </div>
         </div>
-
-        <div class="controls">
-            <button id="scanButton" class="btn-scan" disabled>Iniciar Escáner</button>
-            <button id="randomButton">Reproducir Audio Aleatorio</button>
-            <button id="stopButton" class="btn-stop" disabled>Detener Escáner</button>
-        </div>
-
-        <div class="debug-info" id="debugInfo">
-            Estado: Esperando configuración...
-        </div>
-
-        <footer>
-            <p>GreenTalk - Aplicación Web de Escaneo QR y Reproducción de Audio</p>
-        </footer>
     </div>
 
-    <!-- Incluir la biblioteca para escanear QR -->
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
     <script>
-        // Elementos DOM
-        const permissionSection = document.getElementById('permissionSection');
-        const permissionButton = document.getElementById('permissionButton');
-        const scanButton = document.getElementById('scanButton');
-        const stopButton = document.getElementById('stopButton');
-        const randomButton = document.getElementById('randomButton');
-        const resultDiv = document.getElementById('result');
-        const scanStatus = document.getElementById('scanStatus');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const audioElement = document.getElementById('audioElement');
-        const audioTitle = document.getElementById('audioTitle');
-        const scannerPlaceholder = document.getElementById('scannerPlaceholder');
-        const debugInfo = document.getElementById('debugInfo');
-
-        // Lista de audios disponibles (ACTUALIZA ESTA LISTA CON TUS ARCHIVOS)
-        const audioFiles = [
-            'planta001.mp3',
-            'planta002.mp3', 
-            'planta003.mp3',
-            'planta004.mp3',
-            'planta005.mp3'
-            // Agrega más archivos aquí según necesites
+        // Products Data
+        const products = [
+            { id: 'PM001', name: 'Rojo Carmesí Natural', price: 45, emoji: '🔴', description: 'Pigmento rojo intenso extraído de remolacha y pétalos de rosa.' },
+            { id: 'PM002', name: 'Azul Celeste Puro', price: 50, emoji: '🔵', description: 'Azul brillante obtenido de flores de malva y espirulina.' },
+            { id: 'PM003', name: 'Amarillo Sol Radiante', price: 40, emoji: '🟡', description: 'Amarillo vibrante de cúrcuma y flores de caléndula.' },
+            { id: 'PM004', name: 'Verde Bosque Mágico', price: 48, emoji: '🟢', description: 'Verde profundo de espinaca y hojas de menta.' },
+            { id: 'PM005', name: 'Naranja Atardecer', price: 42, emoji: '🟠', description: 'Naranja cálido de zanahoria y pimentón.' },
+            { id: 'PM006', name: 'Violeta Místico', price: 55, emoji: '🟣', description: 'Violeta elegante de repollo morado y arándanos.' },
+            { id: 'PM007', name: 'Rosa Primavera', price: 43, emoji: '🌸', description: 'Rosa suave de pétalos de rosa y fresas.' },
+            { id: 'PM008', name: 'Turquesa Océano', price: 52, emoji: '💎', description: 'Turquesa brillante de espirulina y malaquita.' },
+            { id: 'PM009', name: 'Marrón Tierra', price: 38, emoji: '🟤', description: 'Marrón natural de café y cacao puro.' },
+            { id: 'PM010', name: 'Fucsia Tropical', price: 47, emoji: '🌺', description: 'Fucsia vibrante de pitaya y bugambilia.' },
+            { id: 'PM011', name: 'Índigo Nocturno', price: 54, emoji: '🌙', description: 'Índigo profundo de mora azul y añil.' },
+            { id: 'PM012', name: 'Coral Marino', price: 46, emoji: '🪸', description: 'Coral cálido de papaya y pimentón dulce.' }
         ];
 
-        // Variable para el escáner QR
-        let html5QrcodeScanner;
-        let isScanning = false;
-        let currentStream = null;
-
-        // Actualizar información de debug
-        function updateDebugInfo(message) {
-            debugInfo.textContent = `Estado: ${message}`;
-            console.log(message);
-        }
-
-        // Verificar si tenemos permisos de cámara
-        async function checkCameraPermission() {
-            try {
-                updateDebugInfo("Verificando permisos de cámara...");
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                // Si llegamos aquí, tenemos permisos
-                stream.getTracks().forEach(track => track.stop());
-                updateDebugInfo("Permisos de cámara confirmados");
-                return true;
-            } catch (error) {
-                updateDebugInfo("Sin permisos de cámara: " + error.message);
-                return false;
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if (window.innerWidth <= 768) {
+                document.getElementById('navLinks').classList.remove('active');
+            }
+            if (sectionId !== 'home') {
+                stopQRScanner();
             }
         }
 
-        // Solicitar permisos de cámara
-        async function requestCameraPermission() {
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // Render Products
+        function renderProducts(container, productsToShow) {
+            const grid = document.getElementById(container);
+            grid.innerHTML = productsToShow.map(product => `
+                <div class="product-card" onclick="showProductDetail('${product.id}')">
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">Bs ${product.price}</div>
+                        <div class="product-description">${product.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Product Detail Modal
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('modalImage').textContent = product.emoji;
+            document.getElementById('modalTitle').textContent = product.name;
+            document.getElementById('modalPrice').textContent = `Bs ${product.price}`;
+            document.getElementById('modalDescription').textContent = product.description;
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        // QR Scanner
+        let videoStream = null;
+        let scanningActive = false;
+
+        async function startQRScanner() {
+            const video = document.getElementById('qr-video');
+            const startBtn = document.getElementById('startScanBtn');
+            const stopBtn = document.getElementById('stopScanBtn');
+            const status = document.getElementById('scanStatus');
+
             try {
-                updateDebugInfo("Solicitando permisos de cámara...");
-                const stream = await navigator.mediaDevices.getUserMedia({ 
+                const constraints = { 
                     video: { 
-                        facingMode: "environment",
+                        facingMode: 'environment',
                         width: { ideal: 1280 },
                         height: { ideal: 720 }
                     } 
-                });
+                };
                 
-                // Detener el stream inmediatamente (solo queríamos el permiso)
-                stream.getTracks().forEach(track => track.stop());
+                videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = videoStream;
+                video.setAttribute('playsinline', true);
                 
-                // Ocultar sección de permisos y habilitar botones
-                permissionSection.classList.add('hidden');
-                scanButton.disabled = false;
-                resultDiv.textContent = "Cámara permitida. Haz clic en 'Iniciar Escáner' para comenzar.";
-                updateDebugInfo("Cámara permitida correctamente");
+                await video.play();
                 
-                return true;
-            } catch (error) {
-                console.error("Error al acceder a la cámara:", error);
-                let errorMessage = "Error: No se pudo acceder a la cámara. ";
+                video.style.display = 'block';
+                startBtn.style.display = 'none';
+                stopBtn.style.display = 'inline-block';
                 
-                if (error.name === 'NotAllowedError') {
-                    errorMessage += "Permiso denegado por el usuario.";
-                } else if (error.name === 'NotFoundError') {
-                    errorMessage += "No se encontró cámara en el dispositivo.";
-                } else if (error.name === 'NotSupportedError') {
-                    errorMessage += "El navegador no soporta esta función.";
-                } else {
-                    errorMessage += error.message;
-                }
+                scanningActive = true;
+                status.className = 'status-message success';
+                status.textContent = 'Escáner activo. Enfoca el código QR...';
                 
-                resultDiv.textContent = errorMessage;
-                updateDebugInfo("Error de cámara: " + error.name);
-                return false;
+                // Wait for video to be ready before starting scan
+                video.addEventListener('loadedmetadata', () => {
+                    setTimeout(() => {
+                        requestAnimationFrame(tick);
+                    }, 500);
+                }, { once: true });
+                
+            } catch (err) {
+                status.className = 'status-message error';
+                status.textContent = 'Error: No se pudo acceder a la cámara. Verifica los permisos.';
+                console.error(err);
             }
         }
 
-        // Función para obtener un audio aleatorio
-        function getRandomAudio() {
-            const randomIndex = Math.floor(Math.random() * audioFiles.length);
-            return audioFiles[randomIndex];
-        }
-
-        // Función para reproducir un audio
-        function playAudio(audioFile) {
-            // Ruta a la carpeta de audios en GitHub
-            const audioPath = `audios/${audioFile}`;
+        function tick() {
+            const video = document.getElementById('qr-video');
+            const status = document.getElementById('scanStatus');
             
-            // Actualizar el reproductor
-            audioElement.src = audioPath;
-            audioTitle.textContent = `Reproduciendo: ${audioFile}`;
-            audioPlayer.classList.remove('hidden');
+            if (!scanningActive) return;
             
-            // Intentar reproducir el audio
-            audioElement.play().catch(error => {
-                console.error("Error al reproducir audio:", error);
-                resultDiv.textContent = `Error al reproducir el audio: ${audioFile}`;
-                updateDebugInfo("Error reproduciendo audio: " + error.message);
-            });
-            
-            resultDiv.textContent = `Reproduciendo: ${audioFile}`;
-            updateDebugInfo(`Audio reproducido: ${audioFile}`);
-        }
-
-        // Función para inicializar el escáner QR
-        async function initQRScanner() {
-            if (isScanning) {
-                updateDebugInfo("El escáner ya está activo");
-                return;
-            }
-            
-            try {
-                updateDebugInfo("Inicializando escáner QR...");
-                scanStatus.textContent = "Iniciando cámara...";
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                const canvas = document.createElement('canvas');
+                const videoWidth = video.videoWidth;
+                const videoHeight = video.videoHeight;
                 
-                // Configuración mejorada del escáner
-                html5QrcodeScanner = new Html5QrcodeScanner(
-                    "reader", 
-                    { 
-                        fps: 15,
-                        qrbox: { 
-                            width: 250, 
-                            height: 250 
-                        },
-                        aspectRatio: 1.0,
-                        supportedScanTypes: [
-                            Html5QrcodeScanType.SCAN_TYPE_QR_CODE,
-                            Html5QrcodeScanType.SCAN_TYPE_CODE_128,
-                            Html5QrcodeScanType.SCAN_TYPE_CODE_39
-                        ],
-                        videoConstraints: {
-                            facingMode: "environment",
-                            width: { min: 640, ideal: 1280, max: 1920 },
-                            height: { min: 480, ideal: 720, max: 1080 }
+                if (videoWidth > 0 && videoHeight > 0) {
+                    canvas.width = videoWidth;
+                    canvas.height = videoHeight;
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+                    
+                    try {
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                            inversionAttempts: 'dontInvert'
+                        });
+                        
+                        if (code) {
+                            scanningActive = false;
+                            const qrData = code.data;
+                            
+                            // Check if QR matches product ID or URL
+                            let productId = null;
+                            
+                            // Check if it's a direct product ID
+                            if (products.find(p => p.id === qrData)) {
+                                productId = qrData;
+                            } else {
+                                // Extract product ID from URL (e.g., https://kabertpro.github.io/pigmentosmagicos/#PM001)
+                                const match = qrData.match(/#(PM\d{3})/);
+                                if (match) {
+                                    productId = match[1];
+                                }
+                            }
+                            
+                            const product = products.find(p => p.id === productId);
+                            if (product) {
+                                stopQRScanner();
+                                showProductDetail(product.id);
+                                status.className = 'status-message success';
+                                status.textContent = `¡Producto encontrado: ${product.name}!`;
+                            } else {
+                                status.className = 'status-message error';
+                                status.textContent = 'Código QR no reconocido. Intenta con otro.';
+                                scanningActive = true;
+                            }
                         }
-                    },
-                    /* verbose= */ false
-                );
-
-                updateDebugInfo("Escáner configurado, iniciando renderizado...");
-                
-                html5QrcodeScanner.render(
-                    onScanSuccess, 
-                    onScanFailure
-                );
-                
-                isScanning = true;
-                scanButton.disabled = true;
-                stopButton.disabled = false;
-                scanStatus.textContent = "Escaneando... Apunta el código QR a la cámara";
-                resultDiv.textContent = "Escáner activo - Buscando códigos QR...";
-                updateDebugInfo("Escáner QR activo y escaneando");
-                
-            } catch (error) {
-                console.error("Error al inicializar escáner:", error);
-                resultDiv.textContent = "Error al iniciar el escáner: " + error.message;
-                updateDebugInfo("Error iniciando escáner: " + error.message);
-            }
-        }
-
-        // Función para detener el escáner
-        async function stopQRScanner() {
-            if (html5QrcodeScanner && isScanning) {
-                try {
-                    updateDebugInfo("Deteniendo escáner QR...");
-                    scanStatus.textContent = "Deteniendo escáner...";
-                    
-                    await html5QrcodeScanner.clear();
-                    
-                    isScanning = false;
-                    scanButton.disabled = false;
-                    stopButton.disabled = true;
-                    scanStatus.textContent = "Escáner detenido";
-                    resultDiv.textContent = "Escáner detenido. Haz clic en 'Iniciar Escáner' para volver a escanear.";
-                    updateDebugInfo("Escáner QR detenido correctamente");
-                    
-                } catch (err) {
-                    console.error("Error al detener escáner:", err);
-                    updateDebugInfo("Error deteniendo escáner: " + err.message);
+                    } catch (e) {
+                        console.error('Error al procesar imagen:', e);
+                    }
                 }
             }
-        }
-
-        // Función que se ejecuta cuando se escanea un QR exitosamente
-        function onScanSuccess(decodedText, decodedResult) {
-            console.log(`Código escaneado: ${decodedText}`, decodedResult);
-            resultDiv.textContent = `✅ Código QR detectado!`;
-            scanStatus.textContent = "¡QR escaneado correctamente!";
-            updateDebugInfo(`QR escaneado: ${decodedText}`);
             
-            // Pequeña vibración si está disponible
-            if (navigator.vibrate) {
-                navigator.vibrate(200);
+            if (scanningActive) {
+                requestAnimationFrame(tick);
             }
-            
-            // Reproducir un audio aleatorio después de un breve delay
-            setTimeout(() => {
-                const randomAudio = getRandomAudio();
-                playAudio(randomAudio);
-                
-                // Detener el escáner después de un escaneo exitoso
-                stopQRScanner();
-            }, 500);
         }
 
-        // Función que se ejecuta cuando hay un error en el escaneo
-        function onScanFailure(error) {
-            // Solo mostrar errores que no sean los normales de "no se encontró código"
-            if (!error || 
-                error === "NotFoundException: No MultiFormat Readers were able to detect the code." ||
-                error.includes("No MultiFormat Readers") ||
-                error.includes("NotFoundException")) {
-                // Estos son errores normales cuando no hay código QR en vista
-                return;
+        function stopQRScanner() {
+            const video = document.getElementById('qr-video');
+            const startBtn = document.getElementById('startScanBtn');
+            const stopBtn = document.getElementById('stopScanBtn');
+            
+            scanningActive = false;
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
             }
-            
-            console.warn(`Error en escaneo QR: ${error}`);
-            updateDebugInfo(`Error de escaneo: ${error}`);
+            video.style.display = 'none';
+            startBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
         }
 
-        // Event Listeners
-        permissionButton.addEventListener('click', requestCameraPermission);
+        // Check if page loaded with product hash
+        function checkURLHash() {
+            const hash = window.location.hash.substring(1);
+            if (hash && products.find(p => p.id === hash)) {
+                showProductDetail(hash);
+            }
+        }
+
+        // Initialize
+        renderProducts('featuredProducts', products.slice(0, 6));
+        renderProducts('allProducts', products);
+        checkURLHash();
         
-        scanButton.addEventListener('click', function() {
-            initQRScanner();
-        });
+        // Listen for hash changes
+        window.addEventListener('hashchange', checkURLHash);
 
-        stopButton.addEventListener('click', function() {
-            stopQRScanner();
-        });
-
-        randomButton.addEventListener('click', function() {
-            const randomAudio = getRandomAudio();
-            playAudio(randomAudio);
-            updateDebugInfo(`Audio aleatorio reproducido: ${randomAudio}`);
-        });
-
-        // Inicialización cuando carga la página
-        document.addEventListener('DOMContentLoaded', async function() {
-            updateDebugInfo("Página cargada, iniciando verificación...");
-            
-            // Verificar si ya tenemos permisos
-            const hasPermission = await checkCameraPermission();
-            
-            if (hasPermission) {
-                permissionSection.classList.add('hidden');
-                scanButton.disabled = false;
-                resultDiv.textContent = "Cámara permitida. Haz clic en 'Iniciar Escáner' para comenzar.";
-                updateDebugInfo("Listo - Permisos confirmados");
-            } else {
-                resultDiv.textContent = "Haz clic en 'Permitir Cámara' para habilitar el escáner QR";
-                updateDebugInfo("Esperando permisos de cámara...");
-            }
-            
-            // Verificar compatibilidad
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                resultDiv.textContent = "ERROR: Tu navegador no soporta acceso a la cámara. Usa Chrome, Firefox o Safari.";
-                updateDebugInfo("Navegador no compatible con cámara");
-            }
+        // Close modal on outside click
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target.id === 'productModal') closeModal();
         });
     </script>
 </body>
